@@ -4,7 +4,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node-dev --inspect --respawn --transpile-only --ignore-watch node_modules src/server.ts"
+    "dev": "ts-node-dev --inspect --respawn --transpile-only --ignore-watch node_modules src/server.ts",
+    "docker:first-run": "docker-compose up --build",
+    "api:start": "docker-compose up",
+    "api:build": "docker build --no-cache -t api-bookstore-api ."
   },
   "keywords": [],
   "author": "",
