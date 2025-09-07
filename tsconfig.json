@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "es2016", // Compila seu código para a versão ES2016
+    "module": "commonjs",
+    //"lib": ["es2022"],
+    "outDir": "./dist",
+    "rootDir": "./src",
+    //"strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
+  },
+  "include": ["src/**/*"]
+}
