@@ -7,7 +7,12 @@
     "dev": "ts-node-dev --inspect --respawn --transpile-only --ignore-watch node_modules src/server.ts",
     "docker:first-run": "docker-compose up --build",
     "api:start": "docker-compose up",
-    "api:build": "docker build --no-cache -t api-bookstore-api ."
+    "api:build": "docker build --no-cache -t api-bookstore-api .",
+    "typeorm": "ts-node-dev ./node_modules/typeorm/cli",
+    "migration:run": "npm run typeorm -- migration:run -d ./src/data-source.ts",
+    "migration:revert": "npm run typeorm -- migration:revert -d ./src/data-source.ts",
+    "migration:generate": "npm run typeorm -- migration:generate ./src/shared/infra/typeorm/migrations/NameMigration -d ./src/data-source.ts",
+    "migration:create": "npm run typeorm migration:create src/shared/infra/typeorm/migrations/"
   },
   "keywords": [],
   "author": "",
@@ -17,10 +22,12 @@
     "express": "^5.1.0",
     "pg": "^8.16.3",
     "reflect-metadata": "^0.2.2",
-    "typeorm": "^0.3.26"
+    "typeorm": "^0.3.26",
+    "uuid": "^12.0.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
+    "@types/uuid": "^10.0.0",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.2"
   }

@@ -11,8 +11,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_DATABASE || 'api_bookstore',
   synchronize: false,
   logging: false,
-  entities: [],
+  entities: ['./src/modules/*/infra/typeorm/entities/*.ts'],
   migrations: ['./src/shared/infra/typeorm/migrations/*.ts'],
   subscribers: [],
 });
-
