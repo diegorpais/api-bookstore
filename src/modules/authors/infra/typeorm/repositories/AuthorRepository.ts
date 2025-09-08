@@ -14,17 +14,28 @@ export class AuthorRepository implements IAuthorRepository {
     this.ormRepository = AppDataSource.getRepository(InfraAuthor);
   }
 
+  private convertInfraToDomain(infraAuthor: InfraAuthor): DomainAuthor {
+    return Object.assign(new DomainAuthor(), infraAuthor);
+  }
+
   public async create(data: ICreateAuthorDTO): Promise<DomainAuthor> {
     const id = uuidV4();
     const authorWithId = { ...data, id };
 
     const authorEntity = this.ormRepository.create(authorWithId);
     const savedAuthor = await this.ormRepository.save(authorEntity);
-    
+
     return this.convertInfraToDomain(savedAuthor);
   }
 
-  private convertInfraToDomain(infraAuthor: InfraAuthor): DomainAuthor {
-    return Object.assign(new DomainAuthor(), infraAuthor);
+  public async findAll(): Promise<DomainAuthor[]> {
+    const authors = await this.ormRepository.find();
+    return authors.map(author => this.convertInfraToDomain(author));
   }
+
+  public async findById(id: string): Promise<DomainAuthor | null> {
+    const author = await this.ormRepository.findOneBy({ id });
+    return author ? this.convertInfraToDomain(author) : null;
+  }
+
 }
