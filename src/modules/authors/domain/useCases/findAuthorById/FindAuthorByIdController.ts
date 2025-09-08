@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { ListAuthorUseCase } from './ListAuthorUseCase';
+import { FindAuthorByIdUseCase } from './FindAuthorByIdUseCase';
 
-export class ListAllAuthorsController {
-  constructor(private listAuthorUseCase: ListAuthorUseCase) { }
+export class FindAuthorByIdController {
+  constructor(private findAuthorByIdUseCase: FindAuthorByIdUseCase) { }
 
   async handle(request: Request, response: Response): Promise<Response> {
     try {
@@ -15,14 +15,14 @@ export class ListAllAuthorsController {
         });
       }
 
-      const author = await this.listAuthorUseCase.execute(id);
+      const author = await this.findAuthorByIdUseCase.execute(id);
 
       if (!author) {
         return response.status(404).json({
           success: false,
           message: 'Author not found'
         });
-      } 
+      }
 
       return response.status(200).json({
         success: true,
