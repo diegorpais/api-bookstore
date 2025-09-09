@@ -11,7 +11,7 @@ export class FindAuthorByIdController {
       if (!id) {
         return response.status(400).json({
           success: false,
-          message: 'Author ID is required'
+          error: 'Author ID is required'
         });
       }
 
@@ -20,7 +20,7 @@ export class FindAuthorByIdController {
       if (!author) {
         return response.status(404).json({
           success: false,
-          message: 'Author not found'
+          error: 'Author not found'
         });
       }
 
@@ -31,7 +31,12 @@ export class FindAuthorByIdController {
       });
 
     } catch (error) {
-      return response.status(500).json({ error: 'Internal server error' });
+      return response.status(500).json(
+        {
+          success: false,
+          error: 'Internal server error'
+        }
+      );
     }
   }
 }
