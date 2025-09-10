@@ -7,4 +7,5 @@ export interface IAuthorRepository {
   findAll(): Promise<DomainAuthor[]>;
   findById(id: string): Promise<DomainAuthor | null>;
   updateAuthor(id: string, data: IUpdateAuthorDTO): Promise<DomainAuthor | null>;
+  deleteAuthor(id: string): Promise<void>;
 }

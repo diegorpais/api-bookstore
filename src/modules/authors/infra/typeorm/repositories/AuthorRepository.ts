@@ -7,6 +7,7 @@ import { ICreateAuthorDTO } from '../../../domain/dtos/ICreateAuthorDTO';
 import { IUpdateAuthorDTO } from '../../../domain/dtos/IUpdateAuthorDTO';
 import { Author as DomainAuthor } from '../../../domain/entities/Author';
 import { Author as InfraAuthor } from '../entities/Author';
+import { ValidationError } from '../../../../../shared/http/errors/ValidationError';
 
 export class AuthorRepository implements IAuthorRepository {
   private ormRepository: Repository<InfraAuthor>;
@@ -44,6 +45,10 @@ export class AuthorRepository implements IAuthorRepository {
     if (!preloaded) return null; // 404 no use case/controller
     const saved = await this.ormRepository.save(preloaded);
     return this.convertInfraToDomain(saved);
+  }
+
+  public async deleteAuthor(id: string): Promise<void> {
+    await this.ormRepository.delete(id);
   }
 
 
