@@ -4,6 +4,7 @@ import { v4 as uuidV4 } from 'uuid';
 import { AppDataSource } from '../../../../../data-source';
 import { IAuthorRepository } from '../../../domain/repositories/IAuthorRepository';
 import { ICreateAuthorDTO } from '../../../domain/dtos/ICreateAuthorDTO';
+import { IUpdateAuthorDTO } from '../../../domain/dtos/IUpdateAuthorDTO';
 import { Author as DomainAuthor } from '../../../domain/entities/Author';
 import { Author as InfraAuthor } from '../entities/Author';
 
@@ -37,5 +38,13 @@ export class AuthorRepository implements IAuthorRepository {
     const author = await this.ormRepository.findOneBy({ id });
     return author ? this.convertInfraToDomain(author) : null;
   }
+
+  public async updateAuthor(id: string, data: IUpdateAuthorDTO): Promise<DomainAuthor | null> {
+    const preloaded = await this.ormRepository.preload({ id, ...data });
+    if (!preloaded) return null; // 404 no use case/controller
+    const saved = await this.ormRepository.save(preloaded);
+    return this.convertInfraToDomain(saved);
+  }
+
 
 }
