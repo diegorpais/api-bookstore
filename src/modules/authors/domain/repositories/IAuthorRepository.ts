@@ -1,3 +1,5 @@
+import { PaginatedResultDTO } from '../../../../shared/domain/dtos/PaginatedResultDTO';
+import { PaginationParamsDTO } from '../../../../shared/domain/dtos/PaginationParamsDTO';
 import { ICreateAuthorDTO } from '../dtos/ICreateAuthorDTO';
 import { IUpdateAuthorDTO } from '../dtos/IUpdateAuthorDTO';
 import { Author as DomainAuthor } from '../entities/Author';
@@ -8,4 +10,5 @@ export interface IAuthorRepository {
   findById(id: string): Promise<DomainAuthor | null>;
   updateAuthor(id: string, data: IUpdateAuthorDTO): Promise<DomainAuthor | null>;
   deleteAuthor(id: string): Promise<void>;
+  findAllPaginated(params: PaginationParamsDTO): Promise<PaginatedResultDTO<DomainAuthor>>;
 }

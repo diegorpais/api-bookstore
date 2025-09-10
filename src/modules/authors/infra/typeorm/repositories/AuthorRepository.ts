@@ -8,6 +8,8 @@ import { IUpdateAuthorDTO } from '../../../domain/dtos/IUpdateAuthorDTO';
 import { Author as DomainAuthor } from '../../../domain/entities/Author';
 import { Author as InfraAuthor } from '../entities/Author';
 import { ValidationError } from '../../../../../shared/http/errors/ValidationError';
+import { PaginationParamsDTO } from '../../../../../shared/domain/dtos/PaginationParamsDTO';
+import { PaginatedResultDTO } from '../../../../../shared/domain/dtos/PaginatedResultDTO';
 
 export class AuthorRepository implements IAuthorRepository {
   private ormRepository: Repository<InfraAuthor>;
@@ -49,6 +51,40 @@ export class AuthorRepository implements IAuthorRepository {
 
   public async deleteAuthor(id: string): Promise<void> {
     await this.ormRepository.delete(id);
+  }
+
+  public async findAllPaginated(params: PaginationParamsDTO): Promise<PaginatedResultDTO<DomainAuthor>> {
+    const { page, limit, sortBy = 'id', sortOrder = 'ASC' } = params;
+
+    // Calcular offset
+    const skip = (page - 1) * limit;
+
+    // Buscar dados com paginação
+    const [authors, totalItems] = await this.ormRepository.findAndCount({
+      skip,
+      take: limit,
+      order: {
+        [sortBy]: sortOrder
+      }
+    });
+
+    // Converter para domínio
+    const domainAuthors = authors.map(author => this.convertInfraToDomain(author));
+
+    // Calcular metadados de paginação
+    const totalPages = Math.ceil(totalItems / limit);
+
+    return {
+      data: domainAuthors,
+      pagination: {
+        currentPage: page,
+        totalPages,
+        totalItems,
+        itemsPerPage: limit,
+        hasNext: page < totalPages,
+        hasPrevious: page > 1
+      }
+    };
   }
 
 
