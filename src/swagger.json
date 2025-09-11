@@ -1,0 +1,80 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Bookstore Documentation",
+    "version": "1.0.0",
+    "description": "This is a sample API",
+    "contact": {
+      "name": "API Support",
+      "email": "support@bookstore.com"
+    }
+  },
+  "paths": {
+    "/api/v1/authors": {
+      "post": {
+        "tags": ["Authors"],
+        "summary": "Create a new author",
+        "description": "This endpoint allows you to create a new author.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Jhon Doe"
+                  },
+                  "biography": {
+                    "type": "string",
+                    "example": "An author biography"
+                  },
+                  "birthDate": {
+                    "type": "string",
+                    "example": "1980-01-01"
+                  },
+                  "nationality": {
+                    "type": "string",
+                    "example": "American"
+                  }
+                },
+                "required": ["name", "birthDate", "nationality"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Author created successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": true,
+                  "message": "Author created successfully",
+                  "data": {
+                    "id": "123",
+                    "name": "Jhon Doe",
+                    "biography": "An author biography",
+                    "birthDate": "1980-01-01",
+                    "nationality": "American"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "message": "Invalid request"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
