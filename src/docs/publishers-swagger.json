@@ -62,7 +62,85 @@
             }
           }
         }
-      }      
+      },
+      "get": {
+        "tags": ["Publishers"],
+        "summary": "Get all publishers",
+        "description": "This endpoint allows you to retrieve all publishers.",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "description": "Indicates if the request was successful." },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "description": "Unique identifier of the author."
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "The full name of the publisher."
+                          },
+                          "address": {
+                            "type": "string",
+                            "description": "The address of the publisher."
+                          },
+                          "phone": {
+                            "type": "string",
+                            "description": "The publisher's phone number."
+                          },
+                          "website": {
+                            "type": "string",
+                            "description": "The website of the publisher."
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "The date and time the publisher record was created."
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "The date and time the publisher record was last updated."
+                          }
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "A message describing the result of the request."
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": [
+                    {
+                      "id": "e19943d7-393c-42ef-b232-88c8a764f744",
+                      "name": "Abril",
+                      "address": "Rua das Flores, 123, São Paulo, SP",
+                      "phone": "12988552266",
+                      "website": "https://www.publisherwebsite.com",
+                      "createdAt": "2025-09-07T19:43:14.676Z",
+                      "updatedAt": "2025-09-10T00:00:18.527Z"
+                    }
+                  ],
+                  "message": "Publishers retrieved successfully"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

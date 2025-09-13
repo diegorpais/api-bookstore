@@ -24,8 +24,13 @@ export class PublisherRepository implements IPublisherRepository {
 
     const publisherEntity = this.ormRepository.create(publisherWithId);
     const savedPublisher = await this.ormRepository.save(publisherEntity);
-    
+
     return this.convertInfraToDomain(savedPublisher);
+  }
+
+  public async listAll(): Promise<DomainPublisher[]> {
+    const publishers = await this.ormRepository.find();
+    return publishers.map(publisher => this.convertInfraToDomain(publisher));
   }
 
 }
