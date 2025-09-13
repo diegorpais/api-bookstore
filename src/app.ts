@@ -4,6 +4,7 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerFile from './swagger.json';
 
 import { authorRoutes } from './modules/authors/author.routes';
+import { publisherRoutes } from './modules/publishers/publisher.routes';
 
 const app = express();
 
@@ -14,7 +15,6 @@ app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 const API_VERSION = '/api/v1';
 
 app.use(`${API_VERSION}/authors`, authorRoutes);
-
-app.use
+app.use(`${API_VERSION}/publishers`, publisherRoutes);
 
 export { app };
