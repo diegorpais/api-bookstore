@@ -1,19 +1,23 @@
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 
-import swaggerFile from './swagger.json';
+import authorsSwagger from './docs/authors-swagger.json';
+import publishersSwagger from './docs/publishers-swagger.json';
 
 import { authorRoutes } from './modules/authors/author.routes';
 import { publisherRoutes } from './modules/publishers/publisher.routes';
 
-const app = express();
-
-app.use(express.json());
-
-app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
-
+const SWAGGER_VERSION = '/swagger/v1';
 const API_VERSION = '/api/v1';
 
+const app = express();
+app.use(express.json());
+
+/** SWAGGER ROUTES */
+app.use(`${SWAGGER_VERSION}/authors`, swaggerUi.serveFiles(authorsSwagger), swaggerUi.setup(authorsSwagger));
+app.use(`${SWAGGER_VERSION}/publishers`, swaggerUi.serveFiles(publishersSwagger), swaggerUi.setup(publishersSwagger));
+
+/** API ROUTES */
 app.use(`${API_VERSION}/authors`, authorRoutes);
 app.use(`${API_VERSION}/publishers`, publisherRoutes);
 

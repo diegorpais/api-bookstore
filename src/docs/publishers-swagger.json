@@ -1,0 +1,68 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Bookstore: Publishers Documentation",
+    "version": "1.0.0",
+    "description": "This is a sample API",
+    "contact": {
+      "name": "API Support",
+      "email": "support@bookstore.com"
+    }
+  },
+  "paths": {
+    "/api/v1/publishers": {
+      "post": {
+        "tags": ["Publishers"],
+        "summary": "Create a new publisher",
+        "description": "This endpoint allows you to create a new publisher.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string", "example": "Jhon Doe" },
+                  "address": { "type": "string", "example": "123 Main St, Anytown, USA" },
+                  "phone": { "type": "string", "example": "12988552266" },
+                  "website": { "type": "string", "example": "https://www.example.com" }
+                },
+                "required": ["name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Publisher created successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": true,
+                  "message": "Publisher created successfully",
+                  "data": {
+                    "id": "123",
+                    "name": "Jhon Doe",
+                    "address": "123 Main St, Anytown, USA",
+                    "phone": "12988552266",
+                    "website": "https://www.example.com"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "message": "Invalid request"
+                }
+              }
+            }
+          }
+        }
+      }      
+    }
+  }
+}
