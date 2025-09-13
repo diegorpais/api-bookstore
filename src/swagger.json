@@ -21,22 +21,10 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "name": {
-                    "type": "string",
-                    "example": "Jhon Doe"
-                  },
-                  "biography": {
-                    "type": "string",
-                    "example": "An author biography"
-                  },
-                  "birthDate": {
-                    "type": "string",
-                    "example": "1980-01-01"
-                  },
-                  "nationality": {
-                    "type": "string",
-                    "example": "American"
-                  }
+                  "name": { "type": "string", "example": "Jhon Doe" },
+                  "biography": { "type": "string", "example": "An author biography" },
+                  "birthDate": { "type": "string", "example": "1980-01-01" },
+                  "nationality": { "type": "string", "example": "American" }
                 },
                 "required": ["name", "birthDate", "nationality"]
               }
@@ -69,6 +57,85 @@
                 "example": {
                   "success": false,
                   "message": "Invalid request"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Authors"],
+        "summary": "Get all authors",
+        "description": "This endpoint allows you to retrieve all authors.",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "description": "Indicates if the request was successful." },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "description": "Unique identifier of the author."
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "The full name of the author."
+                          },
+                          "biography": {
+                            "type": "string",
+                            "description": "A brief biography of the author."
+                          },
+                          "birthDate": {
+                            "type": "string",
+                            "format": "date",
+                            "description": "The author's date of birth."
+                          },
+                          "nationality": {
+                            "type": "string",
+                            "description": "The nationality of the author."
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "The date and time the author record was created."
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "The date and time the author record was last updated."
+                          }
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "A message describing the result of the request."
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": [
+                    {
+                      "id": "e19943d7-393c-42ef-b232-88c8a764f744",
+                      "name": "Diego Borges Pais",
+                      "biography": "desenvolvedor front-end",
+                      "birthDate": "1985-09-09",
+                      "nationality": "Brasileiro",
+                      "createdAt": "2025-09-07T19:43:14.676Z",
+                      "updatedAt": "2025-09-10T00:00:18.527Z"
+                    }
+                  ],
+                  "message": "Authors retrieved successfully"
                 }
               }
             }
