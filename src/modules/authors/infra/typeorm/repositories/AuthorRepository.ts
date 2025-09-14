@@ -57,6 +57,8 @@ export class AuthorRepository implements IAuthorRepository {
     const { page, limit, sortBy = 'id', sortOrder = 'ASC' } = params;
 
     // Calcular offset
+    // Calcula quantos registros "pular" para chegar na página desejada. Por exemplo:
+    // Página 1, limite 10: skip = 0 /// Página 2, limite 10: skip = 10
     const skip = (page - 1) * limit;
 
     // Buscar dados com paginação

@@ -66,16 +66,69 @@
       "get": {
         "tags": ["Publishers"],
         "summary": "Get all publishers",
-        "description": "This endpoint allows you to retrieve all publishers.",
+        "description": "This endpoint allows you to retrieve all publishers with pagination support. If pagination parameters are not provided, default values will be used (page=1, limit=10, sortBy=id, sortOrder=ASC).",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number for pagination (must be greater than 0)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1,
+              "example": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of items per page (must be between 1 and 50)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 10,
+              "example": 10
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "description": "Field to sort by",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "id",
+              "example": "name"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "description": "Sort order (ASC for ascending, DESC for descending)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["ASC", "DESC"],
+              "default": "ASC",
+              "example": "ASC"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Publishers retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "success": { "type": "boolean", "description": "Indicates if the request was successful." },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
                     "data": {
                       "type": "array",
                       "items": {
@@ -84,57 +137,123 @@
                           "id": {
                             "type": "string",
                             "format": "uuid",
-                            "description": "Unique identifier of the author."
+                            "example": "156055d7-021e-4d25-8698-7b21fb9783dc"
                           },
                           "name": {
                             "type": "string",
-                            "description": "The full name of the publisher."
+                            "example": "Abril"
                           },
                           "address": {
                             "type": "string",
-                            "description": "The address of the publisher."
+                            "example": "Av Barbacena, n2"
                           },
                           "phone": {
                             "type": "string",
-                            "description": "The publisher's phone number."
+                            "example": "12988552233"
                           },
                           "website": {
                             "type": "string",
-                            "description": "The website of the publisher."
+                            "example": "www.abrileditora.com.br"
                           },
                           "createdAt": {
                             "type": "string",
                             "format": "date-time",
-                            "description": "The date and time the publisher record was created."
+                            "example": "2025-09-13T16:47:13.629Z"
                           },
                           "updatedAt": {
                             "type": "string",
                             "format": "date-time",
-                            "description": "The date and time the publisher record was last updated."
+                            "example": "2025-09-13T16:47:13.629Z"
                           }
-                        }
+                        },
+                        "required": ["id", "name", "address", "phone", "website", "createdAt", "updatedAt"]
                       }
+                    },
+                    "pagination": {
+                      "type": "object",
+                      "properties": {
+                        "currentPage": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "totalPages": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "totalItems": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "itemsPerPage": {
+                          "type": "integer",
+                          "example": 10
+                        },
+                        "hasNext": {
+                          "type": "boolean",
+                          "example": false
+                        },
+                        "hasPrevious": {
+                          "type": "boolean",
+                          "example": false
+                        }
+                      },
+                      "required": ["currentPage", "totalPages", "totalItems", "itemsPerPage", "hasNext", "hasPrevious"]
                     },
                     "message": {
                       "type": "string",
-                      "description": "A message describing the result of the request."
+                      "example": "Publishers retrieved successfully"
                     }
-                  }
-                },
-                "example": {
-                  "success": true,
-                  "data": [
-                    {
-                      "id": "e19943d7-393c-42ef-b232-88c8a764f744",
-                      "name": "Abril",
-                      "address": "Rua das Flores, 123, São Paulo, SP",
-                      "phone": "12988552266",
-                      "website": "https://www.publisherwebsite.com",
-                      "createdAt": "2025-09-07T19:43:14.676Z",
-                      "updatedAt": "2025-09-10T00:00:18.527Z"
+                  },
+                  "required": ["success", "data", "pagination", "message"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid pagination parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "error": {
+                      "type": "string",
+                      "examples": {
+                        "invalidPage": {
+                          "value": "Page must be greater than 0"
+                        },
+                        "invalidLimit": {
+                          "value": "Limit must be between 1 and 100"
+                        }
+                      }
                     }
-                  ],
-                  "message": "Publishers retrieved successfully"
+                  },
+                  "required": ["success", "error"]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Error retrieving publishers"
+                    }
+                  },
+                  "required": ["success", "message"]
                 }
               }
             }

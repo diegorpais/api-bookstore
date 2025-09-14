@@ -6,6 +6,8 @@ import { IPublisherRepository } from '../../../domain/repositories/IPublisherRep
 import { ICreatePublisherDTO } from '../../../domain/dtos/ICreatePublisherDTO';
 import { Publisher as InfraPublisher } from '../entities/Publisher';
 import { Publisher as DomainPublisher } from '../../../domain/entities/Publisher';
+import { PaginationParamsDTO } from '../../../../../shared/domain/dtos/PaginationParamsDTO';
+import { PaginatedResultDTO } from '../../../../../shared/domain/dtos/PaginatedResultDTO';
 
 export class PublisherRepository implements IPublisherRepository {
   private ormRepository: Repository<InfraPublisher>;
@@ -28,9 +30,32 @@ export class PublisherRepository implements IPublisherRepository {
     return this.convertInfraToDomain(savedPublisher);
   }
 
-  public async listAll(): Promise<DomainPublisher[]> {
-    const publishers = await this.ormRepository.find();
-    return publishers.map(publisher => this.convertInfraToDomain(publisher));
+  public async listAll(params: PaginationParamsDTO): Promise<PaginatedResultDTO<DomainPublisher>> {
+    const { page = 1, limit = 10, sortBy = 'id', sortOrder = 'ASC' } = params;
+    const skip = (page - 1) * limit;
+
+    const [publishers, totalItems] = await this.ormRepository.findAndCount({
+      skip,
+      take: limit,
+      order: {
+        [sortBy]: sortOrder
+      }
+    });
+
+    const domainPublishers = publishers.map(publisher => this.convertInfraToDomain(publisher));
+    const totalPages = Math.ceil(totalItems / limit);
+
+    return {
+      data: domainPublishers,
+      pagination: {
+        currentPage: page,
+        totalPages,
+        totalItems,
+        itemsPerPage: limit,
+        hasNext: page < totalPages,
+        hasPrevious: page > 1
+      }
+    };
   }
 
   public async findPublisherById(id: string): Promise<DomainPublisher | null> {
