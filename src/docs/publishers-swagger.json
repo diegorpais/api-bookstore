@@ -141,6 +141,169 @@
           }
         }
       }
+    },
+    "/api/v1/publishers/{id}": {
+      "get": {
+        "tags": ["Publishers"],
+        "summary": "Get publisher by ID",
+        "description": "This endpoint allows you to retrieve a specific publisher by its unique identifier.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The unique identifier of the publisher",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "156055d7-021e-4d25-8698-7b21fb9783dc"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful."
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Unique identifier of the publisher."
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "The full name of the publisher."
+                        },
+                        "address": {
+                          "type": "string",
+                          "description": "The address of the publisher."
+                        },
+                        "phone": {
+                          "type": "string",
+                          "description": "The publisher's phone number."
+                        },
+                        "website": {
+                          "type": "string",
+                          "description": "The website of the publisher."
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "The date and time the publisher record was created."
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "The date and time the publisher record was last updated."
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "A message describing the result of the request."
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "id": "156055d7-021e-4d25-8698-7b21fb9783dc",
+                    "name": "Abril",
+                    "address": "Av Barbacena, n2",
+                    "phone": "12988552233",
+                    "website": "www.abrileditora.com.br",
+                    "createdAt": "2025-09-13T16:47:13.629Z",
+                    "updatedAt": "2025-09-13T16:47:13.629Z"
+                  },
+                  "message": "Publisher retrieved successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Publisher ID is required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful."
+                    },
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing what went wrong."
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "error": "Publisher id is required"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Publisher not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful."
+                    },
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing what went wrong."
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "error": "Publisher not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful."
+                    },
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing what went wrong."
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "error": "Internal server error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

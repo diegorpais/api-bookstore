@@ -33,4 +33,9 @@ export class PublisherRepository implements IPublisherRepository {
     return publishers.map(publisher => this.convertInfraToDomain(publisher));
   }
 
+  public async findPublisherById(id: string): Promise<DomainPublisher | null> {
+    const publisher = await this.ormRepository.findOneBy({ id });
+    return publisher ? this.convertInfraToDomain(publisher) : null;
+  }
+
 }
