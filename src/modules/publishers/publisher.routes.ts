@@ -2,6 +2,7 @@ import { Router } from "express";
 import { createPublisherController } from './domain/useCases/createPublisher';
 import { listAllPublishersController } from './domain/useCases/listAllPublishers';
 import { findPublisherByIdController } from './domain/useCases/findPublisherById';
+import { updatePublisherController } from './domain/useCases/updatePubliser';
 
 const publisherRoutes = Router();
 
@@ -15,6 +16,10 @@ publisherRoutes.get("/", (req, res) => {
 
 publisherRoutes.get("/:id", (req, res) => {
   return findPublisherByIdController.handle(req, res);
+});
+
+publisherRoutes.patch("/:id", (req, res) => {
+  return updatePublisherController.handle(req, res);
 });
 
 export { publisherRoutes };

@@ -422,6 +422,255 @@
             }
           }
         }
+      },
+      "patch": {
+        "tags": ["Publishers"],
+        "summary": "Update a publisher",
+        "description": "Updates an existing publisher with the provided data. At least one field must be provided for update.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Publisher ID (UUID format)",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "12f46a7a-a95f-4f3d-9036-8407fffa253e"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Publisher data to update",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Publisher name",
+                    "minLength": 2,
+                    "maxLength": 255,
+                    "example": "Etica Nova"
+                  },
+                  "address": {
+                    "type": "string",
+                    "description": "Publisher address",
+                    "maxLength": 500,
+                    "example": "Av Domingos, n720"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "description": "Publisher phone number (7-15 digits)",
+                    "pattern": "^\\d{7,15}$",
+                    "example": "12988226633"
+                  },
+                  "website": {
+                    "type": "string",
+                    "description": "Publisher website URL",
+                    "format": "uri",
+                    "pattern": "^https?://",
+                    "example": "www.editoraetica.com.br"
+                  }
+                },
+                "additionalProperties": false,
+                "minProperties": 1
+              },
+              "examples": {
+                "updateName": {
+                  "summary": "Update only name",
+                  "value": {
+                    "name": "Etica Nova"
+                  }
+                },
+                "updateMultiple": {
+                  "summary": "Update multiple fields",
+                  "value": {
+                    "name": "Etica Nova",
+                    "address": "Av Domingos, n720",
+                    "phone": "12988226633",
+                    "website": "www.editoraetica.com.br"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Publisher updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Publisher unique identifier",
+                          "example": "12f46a7a-a95f-4f3d-9036-8407fffa253e"
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "Publisher name",
+                          "example": "Etica Nova"
+                        },
+                        "address": {
+                          "type": "string",
+                          "description": "Publisher address",
+                          "example": "Av Domingos, n720"
+                        },
+                        "phone": {
+                          "type": "string",
+                          "description": "Publisher phone number",
+                          "example": "12988226633"
+                        },
+                        "website": {
+                          "type": "string",
+                          "description": "Publisher website URL",
+                          "example": "www.editoraetica.com.br"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Publisher creation timestamp",
+                          "example": "2025-09-14T20:42:36.469Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Publisher last update timestamp",
+                          "example": "2025-09-15T23:24:19.168Z"
+                        }
+                      },
+                      "required": ["id", "name", "address", "phone", "website", "createdAt", "updatedAt"]
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Publisher updated successfully"
+                    }
+                  },
+                  "required": ["success", "data", "message"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Validation errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["success", "error"]
+                },
+                "examples": {
+                  "missingId": {
+                    "summary": "Missing publisher ID",
+                    "value": {
+                      "success": false,
+                      "error": "Publisher ID is required"
+                    }
+                  },
+                  "noFields": {
+                    "summary": "No fields to update",
+                    "value": {
+                      "success": false,
+                      "error": "No fields to update"
+                    }
+                  },
+                  "invalidName": {
+                    "summary": "Invalid name length",
+                    "value": {
+                      "success": false,
+                      "error": "Name must be between 2 and 255 characters"
+                    }
+                  },
+                  "invalidAddress": {
+                    "summary": "Invalid address length",
+                    "value": {
+                      "success": false,
+                      "error": "Address must be at most 500 characters"
+                    }
+                  },
+                  "invalidPhone": {
+                    "summary": "Invalid phone format",
+                    "value": {
+                      "success": false,
+                      "error": "Phone must be a valid number with 7 to 15 digits"
+                    }
+                  },
+                  "invalidWebsite": {
+                    "summary": "Invalid website URL",
+                    "value": {
+                      "success": false,
+                      "error": "Website must be a valid URL"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Publisher not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Publisher not found"
+                    }
+                  },
+                  "required": ["success", "message"]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  },
+                  "required": ["success", "error"]
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

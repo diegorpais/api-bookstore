@@ -4,6 +4,7 @@ import { v4 as uuidV4 } from 'uuid';
 import { AppDataSource } from '../../../../../data-source';
 import { IPublisherRepository } from '../../../domain/repositories/IPublisherRepository';
 import { ICreatePublisherDTO } from '../../../domain/dtos/ICreatePublisherDTO';
+import { IUpdatePublisherDTO } from '../../../domain/dtos/IUpdatePublisherDTO';
 import { Publisher as InfraPublisher } from '../entities/Publisher';
 import { Publisher as DomainPublisher } from '../../../domain/entities/Publisher';
 import { PaginationParamsDTO } from '../../../../../shared/domain/dtos/PaginationParamsDTO';
@@ -61,6 +62,14 @@ export class PublisherRepository implements IPublisherRepository {
   public async findPublisherById(id: string): Promise<DomainPublisher | null> {
     const publisher = await this.ormRepository.findOneBy({ id });
     return publisher ? this.convertInfraToDomain(publisher) : null;
+  }
+
+  public async updatePublisher(id: string, data: IUpdatePublisherDTO): Promise<DomainPublisher | null> {
+    const preload = await this.ormRepository.preload({ id, ...data });
+    if (!preload) return null;
+
+    const saved = await this.ormRepository.save(preload);
+    return this.convertInfraToDomain(saved);
   }
 
 }
