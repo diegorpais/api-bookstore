@@ -15,7 +15,12 @@ export class CreatePublisherController {
         return res.status(400).json({ success: false, error: "Missing required field: name" });
       }
 
-      const publisher: ICreatePublisherDTO = { name, address, phone, website };
+      const publisher: ICreatePublisherDTO = {
+        name,
+        address: address && address.trim() !== '' ? address : undefined,
+        phone: phone && phone.trim() !== '' ? phone : undefined,
+        website: website && website.trim() !== '' ? website : undefined
+      };
 
       const newPublisher = await this.createPublisherUseCase.execute(publisher);
 
