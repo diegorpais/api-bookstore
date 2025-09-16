@@ -8,5 +8,6 @@ export interface IPublisherRepository {
   create(data: ICreatePublisherDTO): Promise<DomainPublisher>;
   listAll(params: PaginationParamsDTO): Promise<PaginatedResultDTO<DomainPublisher>>;
   findPublisherById(id: string): Promise<DomainPublisher | null>;
-  updatePublisher(id: string, data: IUpdatePublisherDTO): Promise<DomainPublisher | null>
+  updatePublisher(id: string, data: IUpdatePublisherDTO): Promise<DomainPublisher | null>;
+  deletePublisher(id: string): Promise<void>;
 }

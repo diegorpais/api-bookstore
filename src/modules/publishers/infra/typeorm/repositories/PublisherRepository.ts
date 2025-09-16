@@ -72,4 +72,11 @@ export class PublisherRepository implements IPublisherRepository {
     return this.convertInfraToDomain(saved);
   }
 
+  /**
+   * https://claude.ai/chat/b28ce41e-389a-446d-902a-52b20b5d3875
+   */
+  public async deletePublisher(id: string): Promise<void> {
+    await this.ormRepository.delete(id); // Alterar para softDelete quando a tabela livros for criada
+  }
+
 }

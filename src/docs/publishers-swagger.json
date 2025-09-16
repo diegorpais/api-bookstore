@@ -671,6 +671,105 @@
             }
           }
         }
+      },
+      "delete": {
+        "summary": "Delete a publisher",
+        "description": "Deletes a specific publisher by ID from the system",
+        "tags": ["Publishers"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The unique identifier of the publisher to delete",
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            },
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Publisher deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Publisher deleted successfully"
+                    }
+                  },
+                  "required": ["success", "message"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid input or publisher not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "error": {
+                      "type": "string",
+                      "enum": ["Valid Publisher ID is required", "Publisher with id {id} not found"]
+                    }
+                  },
+                  "required": ["success", "error"]
+                },
+                "examples": {
+                  "invalid_id": {
+                    "summary": "Invalid Publisher ID",
+                    "value": {
+                      "success": false,
+                      "error": "Valid Publisher ID is required"
+                    }
+                  },
+                  "publisher_not_found": {
+                    "summary": "Publisher Not Found",
+                    "value": {
+                      "success": false,
+                      "error": "Publisher with id 123e4567-e89b-12d3-a456-426614174000 not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  },
+                  "required": ["success", "error"]
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

@@ -3,6 +3,7 @@ import { createPublisherController } from './domain/useCases/createPublisher';
 import { listAllPublishersController } from './domain/useCases/listAllPublishers';
 import { findPublisherByIdController } from './domain/useCases/findPublisherById';
 import { updatePublisherController } from './domain/useCases/updatePubliser';
+import { deletePublisherController } from './domain/useCases/deletePublisher';
 
 const publisherRoutes = Router();
 
@@ -20,6 +21,10 @@ publisherRoutes.get("/:id", (req, res) => {
 
 publisherRoutes.patch("/:id", (req, res) => {
   return updatePublisherController.handle(req, res);
+});
+
+publisherRoutes.delete("/:id", (req, res) => {
+  return deletePublisherController.handle(req, res);
 });
 
 export { publisherRoutes };
