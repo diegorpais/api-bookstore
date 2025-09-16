@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Author as DomainAuthor } from '../../../domain/entities/Author';
 
 @Entity('authors')
@@ -9,8 +9,8 @@ export class Author extends DomainAuthor {
   @Column()
   name: string;
 
-  @Column('text')
-  biography: string;
+  @Column('text', { nullable: true })
+  biography?: string;
 
   @Column({ name: 'birth_date', type: 'date' })
   birthDate: Date;
@@ -23,4 +23,7 @@ export class Author extends DomainAuthor {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
+
+  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp', nullable: true })
+  deletedAt?: Date;
 }

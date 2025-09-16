@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Publisher as DomainPublisher } from '../../../domain/entities/Publisher';
 
 @Entity('publishers')
@@ -9,18 +9,21 @@ export class Publisher extends DomainPublisher {
   @Column()
   name: string;
 
-  @Column()
-  address: string;
+  @Column({ nullable: true })
+  address?: string;
 
-  @Column()
-  phone: string;
+  @Column({ nullable: true })
+  phone?: string;
 
-  @Column()
-  website: string;
+  @Column({ nullable: true })
+  website?: string;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
+
+  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp', nullable: true })
+  deletedAt?: Date;
 }
