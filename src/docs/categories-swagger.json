@@ -1,0 +1,139 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Bookstore: Categories Documentation",
+    "version": "1.0.0",
+    "description": "This is a sample API",
+    "contact": {
+      "name": "API Support",
+      "email": "support@bookstore.com"
+    }
+  },
+  "paths": {
+    "/api/v1/categories": {
+      "post": {
+        "tags": ["Categories"],
+        "summary": "Create a new category",
+        "description": "Creates a new category with name and optional description",
+        "operationId": "createCategory",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 100,
+                    "description": "Category name",
+                    "example": "Nova categoria 3"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Category description (optional)",
+                    "example": "descrição categoria 3"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Category created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "example": "Nova categoria"
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "descrição categoria"
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Category created successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Validation errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "error": {
+                      "type": "string",
+                      "enum": ["Name is required", "Name must be between 2 and 100 characters"],
+                      "example": "Name is required"
+                    }
+                  }
+                },
+                "examples": {
+                  "invalid_id": {
+                    "summary": "Name not found",
+                    "value": {
+                      "success": false,
+                      "error": "Name is required"
+                    }
+                  },
+                  "publisher_not_found": {
+                    "summary": "Invalid name length",
+                    "value": {
+                      "success": false,
+                      "error": "Name must be between 2 and 100 characters"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
