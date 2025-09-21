@@ -6,6 +6,8 @@ import { AppDataSource } from '../../../../../data-source';
 import { Category as InfraCategory } from '../entities/Category';
 import { Category as DomainCategory } from '../../../domain/entities/Category';
 import { ICreateCategoryDTO } from '../../../domain/dtos/ICreateCategoryDTO';
+import { PaginationParamsDTO } from '../../../../../shared/domain/dtos/PaginationParamsDTO';
+import { PaginatedResultDTO } from '../../../../../shared/domain/dtos/PaginatedResultDTO';
 
 export class CategoryRepository implements ICategoryRepository {
   private ormRepository: Repository<InfraCategory>;
@@ -26,5 +28,36 @@ export class CategoryRepository implements ICategoryRepository {
     const savedCategory = await this.ormRepository.save(categoryEntity);
 
     return this.convertInfraToDomain(savedCategory);
+  }
+
+  public async listAllCategories(): Promise<DomainCategory[]> {
+    const categories = await this.ormRepository.find();
+    return categories.map(category => this.convertInfraToDomain(category));
+  }
+
+  public async listAllCategoriesPaginated(params: PaginationParamsDTO): Promise<PaginatedResultDTO<DomainCategory>> {
+    const { page, limit, sortBy = 'id', sortOrder = 'ASC' } = params;
+    const skip = (page - 1) * limit;
+
+    const [categories, totalItems] = await this.ormRepository.findAndCount({
+      order: { [sortBy]: sortOrder.toUpperCase() === 'ASC' ? 'ASC' : 'DESC' },
+      skip,
+      take: limit,
+    });
+
+    const domainCategories = categories.map(category => this.convertInfraToDomain(category));
+    const totalPages = Math.ceil(totalItems / limit);
+
+    return {
+      data: domainCategories,
+      pagination: {
+        currentPage: page,
+        totalPages,
+        totalItems,
+        itemsPerPage: limit,
+        hasNext: page < totalPages,
+        hasPrevious: page > 1
+      }
+    };
   }
 }
