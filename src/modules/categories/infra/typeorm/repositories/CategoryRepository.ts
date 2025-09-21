@@ -8,6 +8,7 @@ import { Category as DomainCategory } from '../../../domain/entities/Category';
 import { ICreateCategoryDTO } from '../../../domain/dtos/ICreateCategoryDTO';
 import { PaginationParamsDTO } from '../../../../../shared/domain/dtos/PaginationParamsDTO';
 import { PaginatedResultDTO } from '../../../../../shared/domain/dtos/PaginatedResultDTO';
+import { IUpdateCategoryDTO } from '../../../domain/dtos/IUpdateCategoryDTO';
 
 export class CategoryRepository implements ICategoryRepository {
   private ormRepository: Repository<InfraCategory>;
@@ -59,5 +60,22 @@ export class CategoryRepository implements ICategoryRepository {
         hasPrevious: page > 1
       }
     };
+  }
+
+  public async findCategoryById(id: string): Promise<DomainCategory | null> {
+    const category = await this.ormRepository.findOneBy({ id });
+    return category ? this.convertInfraToDomain(category) : null;
+  }
+
+  public async deleteCategory(id: string): Promise<void> {
+    await this.ormRepository.softDelete(id);
+  }
+
+  public async updateCategory(id: string, data: IUpdateCategoryDTO): Promise<DomainCategory | null> {
+    const preloaded = await this.ormRepository.preload({ id, ...data });
+    if (!preloaded) return null;
+    
+    const saved = await this.ormRepository.save(preloaded);
+    return this.convertInfraToDomain(saved);
   }
 }
