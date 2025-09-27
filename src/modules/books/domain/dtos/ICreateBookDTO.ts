@@ -1,5 +1,4 @@
-export class Book {
-  id: string;
+export interface ICreateBookDTO {
   title: string;
   isbn: string;
   publication_year: number;
@@ -7,7 +6,4 @@ export class Book {
   synopsis: string;
   language: string;
   publisher_id: string;
-  created_at: Date;
-  updated_at: Date;
-  deleted_at?: Date;
 }
