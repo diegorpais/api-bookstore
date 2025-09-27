@@ -13,8 +13,8 @@ export class Book extends DomainBook {
   @Column()
   isbn: string;
 
-  @Column()
-  publication_year: number;
+  @Column({ name: 'publication_year' })
+  publicationYear: number;
 
   @Column()
   pages: number;

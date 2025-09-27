@@ -8,6 +8,7 @@ import categoriesSwagger from './docs/categories-swagger.json';
 import { authorRoutes } from './modules/authors/author.routes';
 import { publisherRoutes } from './modules/publishers/publisher.routes';
 import { categoryRoutes } from './modules/categories/categories.routes';
+import { bookRoutes } from './modules/books/books.routes';
 
 const SWAGGER_VERSION = '/swagger/v1';
 const API_VERSION = '/api/v1';
@@ -24,5 +25,6 @@ app.use(`${SWAGGER_VERSION}/categories`, swaggerUi.serveFiles(categoriesSwagger)
 app.use(`${API_VERSION}/authors`, authorRoutes);
 app.use(`${API_VERSION}/publishers`, publisherRoutes);
 app.use(`${API_VERSION}/categories`, categoryRoutes);
+app.use(`${API_VERSION}/books`, bookRoutes);
 
 export { app };

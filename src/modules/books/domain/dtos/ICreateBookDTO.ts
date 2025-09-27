@@ -1,9 +1,9 @@
 export interface ICreateBookDTO {
   title: string;
   isbn: string;
-  publication_year: number;
+  publicationYear: number;
   pages: number;
   synopsis: string;
   language: string;
-  publisher_id: string;
+  publisherId: string;
 }
