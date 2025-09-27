@@ -1,5 +1,6 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Publisher as DomainPublisher } from '../../../domain/entities/Publisher';
+import { Book as InfraBook } from '../../../../books/infra/typeorm/entities/Book';
 
 @Entity('publishers')
 export class Publisher extends DomainPublisher {
@@ -26,4 +27,7 @@ export class Publisher extends DomainPublisher {
 
   @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp', nullable: true })
   deletedAt?: Date;
+
+  @OneToMany(() => InfraBook, (book) => book.publisher)
+  books: InfraBook[];
 }
