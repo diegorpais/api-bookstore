@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { v4 as uuidV4 } from 'uuid';
 
 import { AppDataSource } from '../../../../../data-source';
@@ -87,6 +87,11 @@ export class AuthorRepository implements IAuthorRepository {
         hasPrevious: page > 1
       }
     };
+  }
+
+  public async findByIds(ids: Array<string>): Promise<Array<DomainAuthor> | null> {
+    const authors = await this.ormRepository.findBy({ id: In(ids) });
+    return authors.length ? authors.map(author => this.convertInfraToDomain(author)) : null;
   }
 
 

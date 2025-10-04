@@ -1,9 +1,10 @@
 import { ValidationError } from '../../../../shared/http/errors/ValidationError';
 import { ICreateBookDTO } from '../dtos/ICreateBookDTO';
+import { validate as uuidValidate } from 'uuid';
 
 export class CreateBookValidator {
   static validate(data: ICreateBookDTO): void {
-    const { title, isbn, publicationYear, pages, synopsis, language, publisherId } = data;
+    const { title, isbn, publicationYear, pages, synopsis, language, publisherId, authorIds } = data;
 
     // title obrigatório, entre 1 e 255 caracteres
     if (!title || title.trim().length < 1 || title.length > 255) {
@@ -39,6 +40,11 @@ export class CreateBookValidator {
     // Publisher ID obrigatório
     if (!publisherId || publisherId.trim().length < 1) {
       throw new ValidationError("Publisher ID is required");
+    }
+
+    // Author IDs obrigatório, deve ser um array com pelo menos um ID, os dados não podem estar vazios
+    if (!authorIds || !Array.isArray(authorIds) || authorIds.length === 0 || authorIds.some(id => !id || id.trim().length < 1 || !uuidValidate(id))) {
+      throw new ValidationError("At least one valid Author ID is required");
     }
   }
 }

@@ -8,16 +8,27 @@ import { Book as DomainBook } from '../../../domain/entities/Book';
 import { ICreateBookDTO } from '../../../domain/dtos/ICreateBookDTO';
 import { PaginatedResultDTO } from '../../../../../shared/domain/dtos/PaginatedResultDTO';
 import { PaginationParamsDTO } from '../../../../../shared/domain/dtos/PaginationParamsDTO';
+import { IBookAuthorRepository } from '../../../domain/repositories/IBookAuthorRepository';
 
 export class BookRepository implements IBookRepository {
   private ormRepository: Repository<InfraBook>;
+  private bookAuthorRepository: IBookAuthorRepository;
 
-  constructor() {
+  constructor(
+    bookAuthorRepository: IBookAuthorRepository
+  ) {
     this.ormRepository = AppDataSource.getRepository(InfraBook);
+    this.bookAuthorRepository = bookAuthorRepository;
   }
 
   private convertInfraToDomain(infraBook: InfraBook): DomainBook {
     return Object.assign(new DomainBook(), infraBook);
+  }
+
+  private async createBookAuthorRelations(bookId: string, authorIds: string[]): Promise<void> {
+    for (const authorId of authorIds) {
+      await this.bookAuthorRepository.createBookAuthor({ bookId, authorId });
+    }
   }
 
   public async createBook(data: ICreateBookDTO): Promise<DomainBook> {
@@ -26,6 +37,9 @@ export class BookRepository implements IBookRepository {
 
     const bookEntity = this.ormRepository.create(bookWithId);
     const savedBook = await this.ormRepository.save(bookEntity);
+
+    await this.createBookAuthorRelations(savedBook.id, data.authorIds);
+
     return this.convertInfraToDomain(savedBook);
   }
 

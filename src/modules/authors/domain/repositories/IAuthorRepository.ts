@@ -8,6 +8,7 @@ export interface IAuthorRepository {
   create(data: ICreateAuthorDTO): Promise<DomainAuthor>;
   findAll(): Promise<DomainAuthor[]>;
   findById(id: string): Promise<DomainAuthor | null>;
+  findByIds(ids: Array<string>): Promise<Array<DomainAuthor> | null>;
   updateAuthor(id: string, data: IUpdateAuthorDTO): Promise<DomainAuthor | null>;
   deleteAuthor(id: string): Promise<void>;
   findAllPaginated(params: PaginationParamsDTO): Promise<PaginatedResultDTO<DomainAuthor>>;

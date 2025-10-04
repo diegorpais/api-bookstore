@@ -6,4 +6,5 @@ export interface ICreateBookDTO {
   synopsis: string;
   language: string;
   publisherId: string;
+  authorIds: string[]
 }
