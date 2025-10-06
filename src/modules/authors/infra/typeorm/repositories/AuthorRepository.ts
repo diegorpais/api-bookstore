@@ -5,21 +5,32 @@ import { AppDataSource } from '../../../../../data-source';
 import { IAuthorRepository } from '../../../domain/repositories/IAuthorRepository';
 import { ICreateAuthorDTO } from '../../../domain/dtos/ICreateAuthorDTO';
 import { IUpdateAuthorDTO } from '../../../domain/dtos/IUpdateAuthorDTO';
+
 import { Author as DomainAuthor } from '../../../domain/entities/Author';
+import { Book as DomainBook } from '../../../../books/domain/entities/Book';
+
 import { Author as InfraAuthor } from '../entities/Author';
-import { ValidationError } from '../../../../../shared/http/errors/ValidationError';
+import { BookAuthor as InfraBookAuthor } from '../../../../books/infra/typeorm/entities/BookAuthor';
+import { Book as InfraBook } from '../../../../books/infra/typeorm/entities/Book';
+
 import { PaginationParamsDTO } from '../../../../../shared/domain/dtos/PaginationParamsDTO';
 import { PaginatedResultDTO } from '../../../../../shared/domain/dtos/PaginatedResultDTO';
 
 export class AuthorRepository implements IAuthorRepository {
   private ormRepository: Repository<InfraAuthor>;
+  private booksRepository: Repository<InfraBook>;
 
   constructor() {
     this.ormRepository = AppDataSource.getRepository(InfraAuthor);
+    this.booksRepository = AppDataSource.getRepository(InfraBook);
   }
 
   private convertInfraToDomain(infraAuthor: InfraAuthor): DomainAuthor {
     return Object.assign(new DomainAuthor(), infraAuthor);
+  }
+
+  private convertInfraBooksToDomain(infraBooks: InfraBook[]): DomainBook[] {
+    return infraBooks.map(infraBook => Object.assign(new DomainBook(), infraBook));
   }
 
   public async create(data: ICreateAuthorDTO): Promise<DomainAuthor> {
@@ -92,6 +103,17 @@ export class AuthorRepository implements IAuthorRepository {
   public async findByIds(ids: Array<string>): Promise<Array<DomainAuthor> | null> {
     const authors = await this.ormRepository.findBy({ id: In(ids) });
     return authors.length ? authors.map(author => this.convertInfraToDomain(author)) : null;
+  }
+
+  public async findBooksByAuthorId(authorId: string): Promise<DomainBook[] | null> {
+    const books = await this.booksRepository
+      .createQueryBuilder('book')
+      .innerJoin(InfraBookAuthor, 'book_author', 'book_author.book_id = book.id')
+      .where('book_author.author_id = :authorId', { authorId })
+      .andWhere('book.deleted_at IS NULL')
+      .getMany();
+
+    return books.length ? this.convertInfraBooksToDomain(books) : null;
   }
 
 

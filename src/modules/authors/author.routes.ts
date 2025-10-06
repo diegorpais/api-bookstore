@@ -8,6 +8,7 @@ import { findAuthorByIdController } from './domain/useCases/findAuthorById';
 import { updateAuthorController } from './domain/useCases/updateAuthor';
 import { deleteAuthorController } from './domain/useCases/deleteAuthor';
 import { listAllAuthorsPaginatedController } from './domain/useCases/listAllAuthorsPaginated';
+import { findBooksByAuthorController } from './domain/useCases/findBooksByAuthor';
 
 
 authorRoutes.post("/", (request, response) => {
@@ -24,6 +25,10 @@ authorRoutes.get("/paginated", (request, response) => {
 
 authorRoutes.get("/:id", (request, response) => {
   return findAuthorByIdController.handle(request, response);
+});
+
+authorRoutes.get("/:id/books", (request, response) => {
+  return findBooksByAuthorController.handle(request, response);
 });
 
 authorRoutes.patch("/:id", (request, response) => {
