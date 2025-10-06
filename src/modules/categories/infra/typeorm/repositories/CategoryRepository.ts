@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { v4 as uuidV4 } from 'uuid';
 
 import { ICategoryRepository } from '../../../domain/repositories/ICategoryRepository';
@@ -74,8 +74,13 @@ export class CategoryRepository implements ICategoryRepository {
   public async updateCategory(id: string, data: IUpdateCategoryDTO): Promise<DomainCategory | null> {
     const preloaded = await this.ormRepository.preload({ id, ...data });
     if (!preloaded) return null;
-    
+
     const saved = await this.ormRepository.save(preloaded);
     return this.convertInfraToDomain(saved);
+  }
+
+  public async findByIds(ids: Array<string>): Promise<Array<DomainCategory> | null> {
+    const categories = await this.ormRepository.findBy({ id: In(ids) });
+    return categories.length ? categories.map(category => this.convertInfraToDomain(category)) : null;
   }
 }

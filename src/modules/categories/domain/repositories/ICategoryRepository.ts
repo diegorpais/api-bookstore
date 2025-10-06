@@ -9,6 +9,7 @@ export interface ICategoryRepository {
   listAllCategories(): Promise<DomainCategory[]>;
   listAllCategoriesPaginated(params: PaginationParamsDTO): Promise<PaginatedResultDTO<DomainCategory>>;
   findCategoryById(id: string): Promise<DomainCategory | null>;
+  findByIds(ids: Array<string>): Promise<Array<DomainCategory> | null>;
   deleteCategory(id: string): Promise<void>;
   updateCategory(id: string, data: IUpdateCategoryDTO): Promise<DomainCategory | null>;
 }
