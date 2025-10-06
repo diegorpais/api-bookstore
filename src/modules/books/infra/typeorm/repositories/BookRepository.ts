@@ -64,8 +64,26 @@ export class BookRepository implements IBookRepository {
       take: limit,
       order: {
         [sortBy]: sortOrder
+      },
+      relations: ['publisher'],
+      select: {
+        publisher: {
+          id: true,
+          name: true
+        }
       }
     });
+
+    /**
+     * relations: ['publisher'],
+      select: {
+        publisher: {
+          id: true,
+          name: true
+        }
+      }
+        Esse conteudo pode ser passado dentro do FIND tbm
+     */
 
     const domainBooks = books.map(book => this.convertInfraToDomain(book));
     const totalPages = Math.ceil(totalItems / limit);
